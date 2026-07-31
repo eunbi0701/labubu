@@ -43,13 +43,21 @@ npm 전역 prefix가 그 폴더 자체다.
 
 | 파일 | 역할 |
 | --- | --- |
-| `index.html` | 전체 마크업. 섹션 순서: 티커 → 네비 → 히어로 → 라인업 → 공방 → 편지 → 주문서 → 푸터 |
+| `index.html` | 홈. 섹션 순서: 티커 → 네비 → 히어로 → 라인업 → 공방 → 편지 → 주문서 → CTA 띠 → 푸터 |
+| `support.html` `account.html` | 고객센터 · 마이페이지 (주문 데이터는 전부 더미) |
 | `styles.css` | `:root` 디자인 토큰 + 섹션별 스타일 + 반응형(파일 하단) |
+| `cart.js` | 장바구니 전부 — 옵션 모달, 슬라이드 패널, Supabase 동기화 |
+| `supabase-config.js` | Supabase 주소 + publishable 키 (공개해도 되는 키) |
 | `uploads/*.jpeg` | 제품 이미지 4종 |
 | `scripts/push.ps1` | GitHub 푸시 헬퍼 (위 규칙 참조) |
 
 `index.html`의 섹션 주석 블록(`<!-- ── Hero ── -->`)과 `styles.css`의 주석 블록이
 1:1로 대응한다. 섹션을 추가하면 양쪽 순서를 맞춰서 넣을 것.
+
+**세 페이지 동기화 규칙** — 템플릿 엔진이 없어 티커·네비·푸터 마크업이 복사돼 있다.
+이 셋과 **네비의 장바구니 버튼**, `<head>`의 `.js` 클래스 스크립트, 문서 끝의
+`supabase-config.js` + `cart.js` 태그를 고치면 `index.html`·`support.html`·`account.html`
+**세 곳 모두** 반영한다. 네비 링크는 홈이 `#lineup`, 서브페이지가 `index.html#lineup`이다.
 
 ## 스타일 작성 규칙
 
@@ -68,6 +76,38 @@ npm 전역 prefix가 그 폴더 자체다.
   새 카드를 만들면 이 세 가지를 그대로 따를 것.
 - 반전 섹션(`.workshop`, `.ticker`, `.footer`)은 `--ink` 바탕이므로 텍스트에
   `--light` / `--light-mid` / `--light-soft`를 쓴다.
+
+## 장바구니 · Supabase (건드리기 전에 읽을 것)
+
+프로젝트 `wejmxmueydmvvfjklaex` (`eunbi0701's Project`, ap-southeast-2).
+
+**절대 바꾸면 안 되는 전제** — 이 사이트에는 로그인이 없다. 그래서 `auth.uid()` 기반 RLS를
+쓸 수 없고, 대신 이렇게 막아 뒀다.
+
+- `public.carts`는 RLS를 켜고 **정책을 하나도 두지 않았다.** = 직접 접근 전면 거부(401).
+- 열려 있는 것은 토큰을 검사하는 `SECURITY DEFINER` 함수 셋뿐이다.
+  `cart_create()` · `cart_load(id, token)` · `cart_save(id, token, items)`
+- Supabase 보안 advisor의 "RLS 정책 없음" · "anon이 SECURITY DEFINER 실행 가능" 경고는
+  **이 설계 그 자체다.** 경고를 없애려고 정책을 추가하거나 `grant execute`를 회수하면
+  장바구니가 죽는다.
+- `supabase-config.js`의 키는 publishable(공개용)이다. 저장소에 두는 것이 맞다.
+  `service_role` 키는 어떤 파일에도 넣지 않는다.
+
+**동작 순서** — localStorage에 먼저 쓰고(즉시) Supabase로 뒤따라 보낸다(디바운스 450ms).
+원격 저장은 `location.protocol`이 `http(s)`일 때만 한다. `file://`은 출처가 `null`이라
+CORS에서 막히므로 로컬 확인 시에는 자동으로 localStorage 전용이 된다.
+따라서 **원격 경로를 확인하려면 정적 서버를 띄워야 한다.**
+
+**단일 원본** — 모델 목록·가격·선택 개수를 `cart.js`에 적지 말 것. HTML이 원본이다.
+
+| 값 | 출처 |
+| --- | --- |
+| 모델 4종 | 라인업 `.product[data-model][data-model-name]` |
+| 플랜 가격 | 주문서 `.plan[data-price]` |
+| 골라야 하는 모델 수 | `.plan[data-picks]` (`data-fixed`면 선택 없이 4종 고정) |
+
+**결제는 없다.** 패널의 "주문하기"는 안내 문구만 띄운다. 주문이 접수된 것처럼 보이는
+화면을 만들지 말 것 — `account.html`의 DEMO 배지와 같은 원칙이다.
 
 ## 유지해야 할 것
 

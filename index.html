@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Space+Mono:wght@400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<!-- JS가 살아 있을 때만 장바구니 버튼을 드러낸다 (styles.css의 .cart-btn 참고) -->
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
@@ -39,7 +41,22 @@
       <a href="#letters">Letters</a>
       <a href="#order">Order</a>
     </div>
-    <a class="btn btn--stamp nav__cta" href="#order">주문하기</a>
+    <div class="nav__actions">
+      <!-- ── 장바구니 버튼 ─── 세 페이지 모두 동일하게 유지 ── -->
+      <button class="cart-btn" type="button" data-cart-open aria-haspopup="dialog" aria-label="장바구니 열기 (비어 있음)">
+        <span class="cart-btn__icon" aria-hidden="true">
+          <!-- lucide: shopping-bag -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+            <path d="M3 6h18"></path>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </span>
+        <span class="cart-btn__count" data-cart-count hidden>0</span>
+      </button>
+      <a class="btn btn--stamp nav__cta" href="#order">주문하기</a>
+    </div>
   </nav>
 
   <!-- ── Hero ─────────────────────────────────────────────── -->
@@ -86,7 +103,7 @@
 
       <div class="grid grid--4">
 
-        <article class="product">
+        <article class="product" data-model="01" data-model-name="별먼지 라부부">
           <div class="product__media">
             <img src="uploads/labubu-purple.jpeg" alt="별과 행성 사이에 앉아 있는 라벤더색 라부부 인형" width="591" height="1182" loading="lazy">
             <span class="tag">MODEL 01</span>
@@ -101,7 +118,7 @@
           </div>
         </article>
 
-        <article class="product">
+        <article class="product" data-model="02" data-model-name="사탕언덕 라부부">
           <div class="product__media">
             <img src="uploads/labubu-rainbow.jpeg" alt="사탕 언덕 위를 걷는 무지개색 라부부 인형" width="736" height="977" loading="lazy">
             <span class="tag">MODEL 02</span>
@@ -116,7 +133,7 @@
           </div>
         </article>
 
-        <article class="product">
+        <article class="product" data-model="03" data-model-name="잠수부 라부부">
           <div class="product__media">
             <img src="uploads/labubu-white.jpeg" alt="물안경을 쓰고 바닷속을 헤엄치는 흰색 라부부 인형" width="736" height="1594" loading="lazy">
             <span class="tag">MODEL 03</span>
@@ -131,7 +148,7 @@
           </div>
         </article>
 
-        <article class="product">
+        <article class="product" data-model="04" data-model-name="비눗방울 라부부">
           <div class="product__media">
             <img src="uploads/labubu-blue.jpeg" alt="비눗방울 안에 들어가 있는 민트색 라부부 인형" width="736" height="981" loading="lazy">
             <span class="tag">MODEL 04</span>
@@ -221,7 +238,8 @@
 
       <div class="grid grid--3 grid--stretch">
 
-        <article class="plan">
+        <!-- data-picks = 모달에서 골라야 하는 모델 수. cart.js가 읽는다. -->
+        <article class="plan" data-plan="A" data-plan-name="Plan A · 한 마리" data-price="39000" data-picks="1">
           <span class="plan__label">Plan A · 한 마리</span>
           <span class="plan__price">₩39,000</span>
           <ul class="plan__list">
@@ -229,10 +247,10 @@
             <li>완구 상자 + 보증서</li>
             <li>키링 고리</li>
           </ul>
-          <a class="plan__cta" href="#order">이걸로 주문</a>
+          <a class="plan__cta" href="#order" data-plan-cta>이걸로 주문</a>
         </article>
 
-        <article class="plan plan--featured">
+        <article class="plan plan--featured" data-plan="B" data-plan-name="Plan B · 두 마리" data-price="72000" data-picks="2">
           <span class="plan__flag">제일 많이 나가요</span>
           <span class="plan__label">Plan B · 두 마리</span>
           <span class="plan__price">₩72,000</span>
@@ -242,10 +260,11 @@
             <li>배경 카드 3장</li>
             <li>무료 배송</li>
           </ul>
-          <a class="plan__cta" href="#order">이걸로 주문</a>
+          <a class="plan__cta" href="#order" data-plan-cta>이걸로 주문</a>
         </article>
 
-        <article class="plan">
+        <!-- data-fixed: 시즌 4종이 모두 들어가므로 고를 것이 없다 -->
+        <article class="plan" data-plan="C" data-plan-name="Plan C · 네 마리" data-price="148000" data-picks="4" data-fixed>
           <span class="plan__label">Plan C · 네 마리</span>
           <span class="plan__price">₩148,000</span>
           <ul class="plan__list">
@@ -254,7 +273,7 @@
             <li>번호 찍힌 나무 상자</li>
             <li>다음 시즌 선예약권</li>
           </ul>
-          <a class="plan__cta" href="#order">이걸로 주문</a>
+          <a class="plan__cta" href="#order" data-plan-cta>이걸로 주문</a>
         </article>
 
       </div>
@@ -333,5 +352,7 @@
     });
   })();
 </script>
+<script src="supabase-config.js"></script>
+<script src="cart.js"></script>
 </body>
 </html>

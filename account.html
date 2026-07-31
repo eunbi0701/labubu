@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Space+Mono:wght@400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<!-- JS가 살아 있을 때만 장바구니 버튼을 드러낸다 (styles.css의 .cart-btn 참고) -->
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 
@@ -39,7 +41,22 @@
       <a href="index.html#letters">Letters</a>
       <a href="index.html#order">Order</a>
     </div>
-    <a class="btn btn--stamp nav__cta" href="index.html#order">주문하기</a>
+    <div class="nav__actions">
+      <!-- ── 장바구니 버튼 ─── 세 페이지 모두 동일하게 유지 ── -->
+      <button class="cart-btn" type="button" data-cart-open aria-haspopup="dialog" aria-label="장바구니 열기 (비어 있음)">
+        <span class="cart-btn__icon" aria-hidden="true">
+          <!-- lucide: shopping-bag -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+            <path d="M3 6h18"></path>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </span>
+        <span class="cart-btn__count" data-cart-count hidden>0</span>
+      </button>
+      <a class="btn btn--stamp nav__cta" href="index.html#order">주문하기</a>
+    </div>
   </nav>
 
   <!-- ── Page head ────────────────────────────────────────── -->
@@ -162,5 +179,7 @@
   </footer>
 
 </div>
+<script src="supabase-config.js"></script>
+<script src="cart.js"></script>
 </body>
 </html>

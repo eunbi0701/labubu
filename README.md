@@ -8,16 +8,19 @@ Claude Design 프로젝트 `Labubu Landing - Toy Package.dc.html`를 의존성 �
 ## 구성
 
 ```
-index.html        홈 (티커·네비·히어로·라인업·공방·편지·주문서·CTA 띠·푸터)
-support.html      고객센터 (연락처·배송/교환/환불·FAQ)
-account.html      마이페이지 (주문 조회 — 데모 화면)
-styles.css        디자인 토큰 + 세 페이지 전체 스타일 + 반응형
-uploads/          제품 이미지 4종
-docs/             구현계획 문서
-scripts/push.ps1  git CLI 없이 GitHub REST API로 푸시
+index.html          홈 (티커·네비·히어로·라인업·공방·편지·주문서·CTA 띠·푸터)
+support.html        고객센터 (연락처·배송/교환/환불·FAQ)
+account.html        마이페이지 (주문 조회 — 데모 화면)
+styles.css          디자인 토큰 + 세 페이지 전체 스타일 + 반응형
+cart.js             장바구니 (옵션 모달 · 슬라이드 패널 · Supabase 동기화)
+supabase-config.js  Supabase 주소와 publishable 키
+uploads/            제품 이미지 4종
+docs/               구현계획 문서
+scripts/push.ps1    git CLI 없이 GitHub REST API로 푸시
 ```
 
 로컬에서 보려면 `index.html`을 브라우저로 열면 됩니다. 빌드 과정 없음.
+단 `file://`로 열면 장바구니가 이 브라우저에만 저장됩니다 (아래 참조).
 
 ### 페이지 구조
 
@@ -45,6 +48,46 @@ scripts/push.ps1  git CLI 없이 GitHub REST API로 푸시
   흐르지 않고 손으로 미는 줄이 됩니다.
 
 속도·카드 폭은 `styles.css`의 `.scroller` 안 `--scroll-duration`, `--letter-w`로 조절합니다.
+
+## 장바구니
+
+주문서의 **"이걸로 주문"** → 옵션 모달 → **"장바구니에 담기"** → 네비의 장바구니 서랍.
+결제는 아직 없습니다. 담는 데까지가 전부이며, 패널의 "주문하기"는 그 사실을 알리는 안내만 띄웁니다.
+
+옵션은 플랜에 맞춰 달라집니다.
+
+| 플랜 | 모델 선택 | 그 외 공통 옵션 |
+| --- | --- | --- |
+| A · 한 마리 | 4종 중 **1종** | 수량, 선물 포장, 손글씨 편지 문구(40자) |
+| B · 두 마리 | 4종 중 **2종** | 〃 |
+| C · 네 마리 | 없음 — 시즌 4종 고정 | 〃 |
+
+정원이 차면 나머지 칸이 잠기고, 다 고르기 전에는 담기 버튼이 눌리지 않습니다.
+옵션이 완전히 같은 항목을 또 담으면 줄이 늘지 않고 수량만 올라갑니다.
+
+모델 목록은 `cart.js`에 따로 적지 않고 **라인업 섹션의 `data-model` 속성에서 읽습니다.**
+라인업을 고치면 모달이 따라옵니다. 가격·선택 개수도 마찬가지로 주문서 카드의
+`data-price` / `data-picks` / `data-fixed`가 원본입니다.
+
+### 저장 — 로컬 + Supabase
+
+localStorage에 먼저 쓰고 Supabase로 뒤따라 보냅니다. 그래서 네트워크가 느려도 담기는 즉시 끝나고,
+브라우저 저장소를 비워도 다른 기기·다른 브라우저에서 이어서 볼 수 있습니다.
+`http(s)`로 열렸을 때만 원격 저장을 시도합니다 — `file://`은 출처가 `null`이라 어차피 CORS에서 막힙니다.
+
+**로그인이 없는 사이트에서 남의 장바구니를 못 보게 하는 방법**이 이 설계의 핵심입니다.
+
+- `carts` 테이블은 RLS를 켜고 **정책을 하나도 두지 않아** 직접 접근이 전부 거부됩니다 (401).
+- 대신 장바구니마다 비밀 토큰(uuid)을 발급하고, 토큰을 검사하는 함수 세 개만 열어 둡니다.
+  `cart_create()` · `cart_load(id, token)` · `cart_save(id, token, items)`
+- 따라서 목록을 훑거나(enumeration) 남의 id를 찍어 여는 일이 불가능합니다.
+  토큰이 틀리면 읽기는 `null`, 쓰기는 `false`를 돌려줍니다.
+- `supabase-config.js`의 publishable 키는 **공개해도 되는 키**입니다. 위 함수 셋 외에는
+  아무것도 못 합니다. 서버 비밀키(`service_role`)는 저장소에 두지 않습니다.
+- 익명 쓰기라 서버에서 크기도 막습니다 — 항목 50개, 16KB 초과 시 거부.
+
+> Supabase 보안 advisor가 "RLS 정책 없음", "anon이 SECURITY DEFINER 함수 실행 가능" 경고를 냅니다.
+> **둘 다 의도한 설계입니다.** 정책을 추가하거나 함수 권한을 회수하면 장바구니가 멈춥니다.
 
 ## 푸시
 
@@ -80,7 +123,7 @@ powershell -File scripts/push.ps1 -Message "커밋 메시지"
 | --- | --- |
 | `≤1080px` | 라인업 4열 → 2열 |
 | `≤900px` | 히어로 · 공방 세로 스택, 네비 링크 줄바꿈, 편지/주문서 1열 |
-| `≤560px` | 라인업 1열, 한정 뱃지 축소 |
+| `≤560px` | 라인업 1열, 한정 뱃지 축소, 옵션 모달의 모델 4칸 → 2×2 |
 
 제목·여백은 `clamp()`로 유동적으로 줄어듭니다.
 `prefers-reduced-motion`에서는 뱃지 흔들림과 부드러운 스크롤이 꺼집니다.

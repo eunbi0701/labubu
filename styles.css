@@ -114,6 +114,8 @@ html { scroll-behavior: smooth; }
 .nav__links a { color: var(--ink); padding-bottom: 2px; border-bottom: 1.5px solid transparent; }
 .nav__links a:hover { color: var(--ink); border-bottom-color: var(--stamp); }
 
+.nav__actions { display: flex; align-items: center; gap: 10px; }
+
 /* ── Buttons ──────────────────────────────────────────────── */
 
 .btn {
@@ -675,6 +677,308 @@ a.contact__value:hover { color: var(--stamp); }
 .orders__empty-title { font-family: var(--head); font-weight: 700; font-size: 28px; }
 .orders__empty-desc { font-size: 14px; color: var(--text-mid); margin-bottom: 8px; }
 
+/* ── Nav cart button ──────────────────────────────────────────
+   JS 없이는 열 수 없는 버튼이라 기본은 숨기고, <head>에서 붙는
+   .js 클래스가 있을 때만 드러낸다. 죽은 버튼을 보여주지 않기 위해서다. */
+
+.cart-btn { display: none; }
+
+.js .cart-btn {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  background: var(--card); color: var(--ink);
+  border: var(--bw) solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.cart-btn:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+.cart-btn svg { display: block; width: 19px; height: 19px; }
+
+.cart-btn__count {
+  min-width: 21px; padding: 2px 5px;
+  background: var(--stamp); color: var(--paper);
+  border-radius: 999px;
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  line-height: 1.4; text-align: center;
+}
+.cart-btn__count[hidden] { display: none; }
+
+/* ── Option modal (주문서) ───────────────────────────────────── */
+
+.opt, .cart {
+  padding: 0; border: 0; background: transparent;
+  color: var(--ink);
+  max-width: none; max-height: none;
+}
+.opt::backdrop, .cart::backdrop { background: rgba(58, 42, 25, 0.55); }
+
+.opt {
+  width: min(560px, calc(100% - 2 * var(--gutter)));
+  margin: auto;
+}
+.opt__box {
+  display: flex; flex-direction: column; gap: 20px;
+  max-height: min(86vh, 780px); overflow-y: auto;
+  padding: 26px 26px 24px;
+  background: var(--card);
+  border: var(--bw) solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--sh) var(--sh) 0 var(--ink);
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.opt.is-open .opt__box { transform: none; opacity: 1; }
+
+.opt__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.opt__titles { display: flex; flex-direction: column; gap: 6px; }
+.opt__label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-soft);
+}
+.opt__title { font-family: var(--head); font-weight: 700; font-size: 32px; line-height: 1; }
+
+.opt__x, .cart__x {
+  flex: 0 0 auto;
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  background: var(--paper); color: var(--ink);
+  border: var(--bw) solid var(--ink);
+  font-family: var(--mono); font-size: 20px; line-height: 1;
+  cursor: pointer;
+}
+.opt__x:hover, .cart__x:hover { background: var(--accent); }
+
+.opt__field { margin: 0; padding: 0; border: 0; }
+.opt__legend {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; width: 100%; padding: 0 0 12px;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-soft);
+}
+.opt__count { font-weight: 700; color: var(--stamp); }
+.opt__count.is-done { color: var(--text-soft); }
+.opt__hint { padding-top: 10px; font-size: 13px; line-height: 1.7; color: var(--text-mid); }
+
+/* 모델 고르기 — 진짜 체크박스를 숨기고 카드를 라벨로 쓴다.
+   키보드 조작과 스크린리더 읽기가 브라우저 기본으로 따라온다. */
+.picker { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+
+.picker__item {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 8px;
+  background: var(--paper);
+  border: var(--bw) solid var(--ink); border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.picker__item:hover { background: var(--card); }
+.picker__input { position: absolute; opacity: 0; width: 0; height: 0; }
+.picker__input:focus-visible ~ .picker__media { outline: 3px solid var(--stamp); outline-offset: 2px; }
+
+.picker__media { position: relative; overflow: hidden; border: 1.5px solid var(--ink); }
+.picker__media img { width: 100%; height: 78px; object-fit: cover; filter: var(--img-filter); }
+
+.picker__check {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background: rgba(184, 70, 47, 0.82); color: var(--paper);
+  font-family: var(--head); font-weight: 700; font-size: 34px; line-height: 1;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.picker__input:checked ~ .picker__media .picker__check { opacity: 1; }
+
+.picker__tag { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--text-soft); }
+.picker__name { font-family: var(--head); font-weight: 700; font-size: 15px; line-height: 1.15; }
+
+/* 정원이 찬 뒤의 나머지 칸 */
+.picker__input:disabled:not(:checked) ~ .picker__media { opacity: 0.4; }
+.picker__input:disabled:not(:checked) ~ .picker__name,
+.picker__input:disabled:not(:checked) ~ .picker__tag { opacity: 0.5; }
+.picker__item:has(.picker__input:disabled:not(:checked)) { cursor: default; }
+
+.opt__row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  padding-top: 16px; border-top: 1.5px var(--rule-style) var(--rule);
+}
+.opt__rowlabel {
+  display: block;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-soft);
+}
+
+.stepper { display: flex; align-items: center; border: var(--bw) solid var(--ink); background: var(--paper); }
+.stepper__btn {
+  width: 38px; height: 38px;
+  display: grid; place-items: center;
+  background: transparent; color: var(--ink); border: 0;
+  font-family: var(--mono); font-size: 18px; line-height: 1;
+  cursor: pointer;
+}
+.stepper__btn:hover:not(:disabled) { background: var(--accent); }
+.stepper__btn:disabled { opacity: 0.35; cursor: default; }
+.stepper__value {
+  min-width: 44px; text-align: center;
+  font-family: var(--mono); font-size: 14px; font-weight: 700;
+  border-inline: var(--bw) solid var(--ink);
+  line-height: 38px;
+}
+.stepper--sm .stepper__btn { width: 30px; height: 30px; font-size: 15px; }
+.stepper--sm .stepper__value { min-width: 34px; line-height: 30px; font-size: 12px; }
+
+.opt__check {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1.5px var(--rule-style) var(--rule); border-radius: var(--radius);
+  cursor: pointer;
+}
+.opt__check input { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--stamp); }
+.opt__checktext { display: flex; flex-direction: column; gap: 4px; }
+.opt__checkname { font-family: var(--head); font-weight: 700; font-size: 19px; line-height: 1; }
+.opt__checkdesc { font-size: 12px; line-height: 1.6; color: var(--text-mid); }
+
+.opt__note { display: flex; flex-direction: column; gap: 8px; }
+.opt__textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--paper); color: var(--ink);
+  border: var(--bw) solid var(--ink); border-radius: var(--radius);
+  font-family: var(--body); font-size: 14px; line-height: 1.7;
+  resize: vertical;
+}
+.opt__textarea::placeholder { color: var(--text-soft); }
+.opt__left { align-self: flex-end; font-family: var(--mono); font-size: 10px; color: var(--text-soft); }
+
+.opt__foot {
+  display: flex; flex-direction: column; gap: 12px;
+  padding-top: 18px; border-top: var(--bw) solid var(--ink);
+}
+.opt__sum, .cart__sum { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.opt__sumlabel, .cart__sumlabel {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-soft);
+}
+.opt__sumvalue, .cart__sumvalue { font-family: var(--head); font-weight: 700; font-size: 34px; line-height: 1; }
+
+.opt__submit, .cart__go {
+  width: 100%; padding: 14px;
+  background: var(--stamp); color: var(--paper);
+  border: var(--bw) solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-family: var(--head); font-weight: 700; font-size: 21px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.opt__submit:hover:not(:disabled), .cart__go:hover:not(:disabled) {
+  transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink);
+}
+.opt__submit:disabled {
+  background: var(--rule); color: var(--card);
+  box-shadow: 4px 4px 0 rgba(58, 42, 25, 0.25);
+  cursor: default;
+}
+.opt__warn { font-family: var(--mono); font-size: 11px; line-height: 1.6; color: var(--stamp); text-align: center; }
+.opt__warn:empty { display: none; }
+
+/* ── Cart panel (오른쪽에서 밀려 나오는 서랍) ────────────────── */
+
+.cart {
+  width: min(420px, 100%);
+  height: 100%; max-height: 100%;
+  margin: 0 0 0 auto;                   /* 오른쪽 끝에 붙인다 */
+  display: flex; flex-direction: column;
+  background: var(--card);
+  border-left: var(--bw) solid var(--ink);
+  transform: translateX(100%);
+  transition: transform 0.22s ease;
+}
+.cart[open] { display: flex; }
+.cart.is-open { transform: none; }
+
+.cart__head {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 22px;
+  border-bottom: var(--bw) solid var(--ink);
+}
+.cart__title { font-family: var(--head); font-weight: 700; font-size: 30px; line-height: 1; }
+
+.cart__list {
+  flex: 1; overflow-y: auto;
+  display: flex; flex-direction: column;
+  padding: 0;
+}
+.cart__list[hidden] { display: none; }
+
+.cart__item {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 18px 22px;
+  border-bottom: 1.5px var(--rule-style) var(--rule);
+}
+.cart__itemtop { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.cart__itemname { font-family: var(--head); font-weight: 700; font-size: 21px; line-height: 1.1; }
+.cart__itemprice { font-family: var(--mono); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.cart__itemopt { font-size: 13px; line-height: 1.6; color: var(--text-mid); }
+.cart__itemextra { font-family: var(--mono); font-size: 11px; line-height: 1.6; color: var(--text-soft); }
+.cart__itemrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 4px; }
+
+.cart__del {
+  background: transparent; border: 0; padding: 4px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+  color: var(--text-soft); text-decoration: underline; cursor: pointer;
+}
+.cart__del:hover { color: var(--stamp); }
+
+.cart__empty {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 40px 26px; text-align: center;
+}
+.cart__empty[hidden] { display: none; }
+.cart__empty-title { font-family: var(--head); font-weight: 700; font-size: 26px; }
+.cart__empty-desc { font-size: 14px; line-height: 1.7; color: var(--text-mid); }
+
+.cart__foot {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 20px 22px;
+  border-top: var(--bw) solid var(--ink);
+  background: var(--paper);
+}
+.cart.is-empty .cart__go, .cart.is-empty .cart__clear { display: none; }
+
+.cart__notice {
+  font-family: var(--mono); font-size: 11px; line-height: 1.7;
+  color: var(--text-mid); text-wrap: pretty;
+}
+.cart__notice:empty { display: none; }
+
+.cart__clear {
+  align-self: center;
+  background: transparent; border: 0; padding: 2px 4px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+  color: var(--text-soft); text-decoration: underline; cursor: pointer;
+}
+.cart__clear:hover { color: var(--stamp); }
+
+/* ── Toast ────────────────────────────────────────────────── */
+
+.toast {
+  position: fixed; left: 50%; bottom: 26px; z-index: 20;
+  transform: translate(-50%, 14px);
+  padding: 12px 22px;
+  background: var(--ink); color: var(--paper);
+  border: var(--bw) solid var(--ink);
+  box-shadow: 4px 4px 0 var(--stamp);
+  font-family: var(--head); font-weight: 700; font-size: 19px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+
 /* ── Footer ───────────────────────────────────────────────── */
 
 .footer {
@@ -732,6 +1036,13 @@ a.contact__value:hover { color: var(--stamp); }
   .hero__stats { gap: 12px; }
   .footer { justify-content: center; text-align: center; gap: 10px; }
 
+  /* 모델 4칸이 한 줄에 들어가면 이미지가 40px 남짓으로 뭉개진다 */
+  .picker { grid-template-columns: repeat(2, 1fr); }
+  .picker__media img { height: 96px; }
+  .opt__box { padding: 20px 18px 18px; gap: 16px; }
+  .opt__title { font-size: 26px; }
+  .opt__sumvalue, .cart__sumvalue { font-size: 28px; }
+
   .helpdesk__card {
     grid-template-columns: 1fr; grid-template-rows: repeat(4, auto);
     gap: 10px; padding: 24px 22px;
@@ -755,9 +1066,14 @@ a.contact__value:hover { color: var(--stamp); }
   /* 흐르지 않고, 손으로 밀어서 보는 줄이 된다 */
   .scroller { overflow-x: auto; }
   .scroller__track { animation: none !important; }
+
+  /* 서랍과 모달은 미끄러지지 않고 그 자리에 나타난다 */
+  .cart { transform: none; }
+  .opt__box { transform: none; opacity: 1; }
+  .toast { transform: translate(-50%, 0); }
 }
 
 @media print {
-  .ticker, .nav__cta, .badge { display: none; }
+  .ticker, .nav__cta, .badge, .cart-btn { display: none; }
   .page { background: #fff; }
 }
