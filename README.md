@@ -11,9 +11,33 @@ Claude Design 프로젝트 `Labubu Landing - Toy Package.dc.html`를 의존성 �
 index.html      마크업 (티커 · 네비 · 히어로 · 라인업 · 공방 · 편지 · 주문서 · 푸터)
 styles.css      디자인 토큰 + 전체 스타일 + 반응형
 uploads/        제품 이미지 4종
+scripts/push.ps1  git CLI 없이 GitHub REST API로 푸시
 ```
 
 로컬에서 보려면 `index.html`을 브라우저로 열면 됩니다. 빌드 과정 없음.
+
+## 받은 편지들 — 가로 무한 스크롤
+
+편지 카드는 3열 그리드 대신 끊김 없이 흐르는 가로 줄로 배치됩니다.
+카드 디자인(`.letter`)은 그대로이고, 스크롤러 안에서 폭만 고정됩니다.
+
+- 카드 3장을 JS로 3번 복제해 총 4세트를 만들고, 한 세트 폭
+  `calc(3 * (--letter-w + --letter-gap))`만큼 이동시켜 원위치로 순환합니다.
+  복제본에는 `aria-hidden="true"`가 붙어 스크린리더가 중복해 읽지 않습니다.
+- 마우스를 올리거나 키보드 포커스가 들어오면 멈춥니다 — 흐르는 본문은 정지 없이 읽기 어렵습니다.
+- 양 끝은 `mask-image`로 페이드됩니다.
+- JS가 없으면 원본 카드 3장이 그대로 남고, `prefers-reduced-motion`에서는
+  흐르지 않고 손으로 미는 줄이 됩니다.
+
+속도·카드 폭은 `styles.css`의 `.scroller` 안 `--scroll-duration`, `--letter-w`로 조절합니다.
+
+## 푸시
+
+이 PC에는 git CLI가 없어 REST API로 올립니다. 토큰은 `.env`의 `GITHUB_TOKEN`에서 읽습니다.
+
+```powershell
+powershell -File scripts/push.ps1 -Message "커밋 메시지"
+```
 
 ## 디자인 토큰
 
