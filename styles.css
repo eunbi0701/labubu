@@ -344,6 +344,7 @@ html { scroll-behavior: smooth; }
 
 .scroller__track[data-ready] {
   animation: scroll-letters var(--scroll-duration) linear infinite;
+  animation-delay: -63.4s; /* DEBUG */
 }
 
 /* 읽는 동안 멈춤 — 흐르는 본문은 정지 없이는 읽기 어렵다 */
