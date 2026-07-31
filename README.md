@@ -8,13 +8,28 @@ Claude Design 프로젝트 `Labubu Landing - Toy Package.dc.html`를 의존성 �
 ## 구성
 
 ```
-index.html      마크업 (티커 · 네비 · 히어로 · 라인업 · 공방 · 편지 · 주문서 · 푸터)
-styles.css      디자인 토큰 + 전체 스타일 + 반응형
-uploads/        제품 이미지 4종
+index.html        홈 (티커·네비·히어로·라인업·공방·편지·주문서·CTA 띠·푸터)
+support.html      고객센터 (연락처·배송/교환/환불·FAQ)
+account.html      마이페이지 (주문 조회 — 데모 화면)
+styles.css        디자인 토큰 + 세 페이지 전체 스타일 + 반응형
+uploads/          제품 이미지 4종
+docs/             구현계획 문서
 scripts/push.ps1  git CLI 없이 GitHub REST API로 푸시
 ```
 
 로컬에서 보려면 `index.html`을 브라우저로 열면 됩니다. 빌드 과정 없음.
+
+### 페이지 구조
+
+홈 하단 CTA 띠에서 두 서브페이지로 들어갑니다. 세 페이지는 티커·네비·푸터를 공유하지만
+템플릿 엔진이 없어 **마크업이 복사되어 있습니다** — 이 셋을 고칠 때는 세 파일 모두 반영해야 합니다.
+
+네비 링크는 페이지마다 다릅니다. 홈은 `#lineup` 같은 페이지 내 앵커를 쓰고,
+서브페이지는 `index.html#lineup`처럼 파일명을 붙입니다. 그대로 복사하면 링크가 죽습니다.
+
+`account.html`은 백엔드가 없어 **주문 데이터가 전부 HTML에 박힌 더미**입니다.
+페이지 상단 DEMO 배지가 이를 밝히고 있으며, `<meta name="robots" content="noindex">`로
+검색 색인에서도 제외했습니다. 실제 서비스가 되면 배지를 지우고 진입점을 로그인 뒤로 옮겨야 합니다.
 
 ## 받은 편지들 — 가로 무한 스크롤
 
