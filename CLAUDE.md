@@ -26,8 +26,8 @@ powershell -File scripts/push.ps1 -Message "무엇을 바꿨는지 한 줄"
 
 ## 프로젝트 성격
 
-의존성 없는 정적 랜딩페이지 한 장. **빌드·번들러·패키지 매니저·테스트가 없다.**
-`node`도 설치돼 있지 않으므로 npm 기반 도구를 제안하지 말 것.
+의존성 없는 정적 랜딩페이지 한 장. **이 프로젝트 자체에는 빌드·번들러·`package.json`·테스트가
+없다.** 정적 사이트라는 전제를 깨는 도구 체인(프레임워크, 번들러)을 끌어들이지 말 것.
 
 미리보기는 파일을 직접 열면 된다 (`file://`로 폰트·이미지 모두 정상 동작):
 
@@ -35,7 +35,9 @@ powershell -File scripts/push.ps1 -Message "무엇을 바꿨는지 한 줄"
 Start-Process index.html
 ```
 
-렌더링 확인이 필요하면 Chrome/Edge 헤드리스 스크린샷을 쓴다(둘 다 설치돼 있음).
+렌더링 확인은 Playwright MCP(`browser_*` 툴)로 한다. Chrome·Edge 모두 설치돼 있다.
+Node는 `%LOCALAPPDATA%\Programs\nodejs`에 zip 빌드로 설치돼 있고(v24 LTS, 사용자 PATH 등록됨),
+npm 전역 prefix가 그 폴더 자체다.
 
 ## 구조
 

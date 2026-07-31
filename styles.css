@@ -69,6 +69,13 @@ html { scroll-behavior: smooth; }
 }
 .skip-link:focus { left: 12px; top: 12px; color: var(--paper); }
 
+/* 화면에는 안 보이지만 스크린리더는 읽는 텍스트 */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
 .page { width: 100%; background: var(--paper); }
 
 .wrap { max-width: 1160px; margin: 0 auto; }
@@ -409,6 +416,247 @@ html { scroll-behavior: smooth; }
 .plan--featured .plan__cta { background: var(--light); }
 .plan--featured .plan__cta:hover { background: var(--accent); }
 
+/* ── Helpdesk band (index) ────────────────────────────────── */
+
+.helpdesk {
+  padding: var(--sec-pad) var(--gutter);
+  border-top: var(--bw) solid var(--ink);
+}
+
+.helpdesk__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+
+.helpdesk__card {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 4px 20px;
+  align-content: start;
+  padding: 28px 26px;
+  background: var(--card);
+  color: var(--ink);
+  border: var(--bw) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--sh) var(--sh) 0 rgba(58, 42, 25, 0.18);
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+.helpdesk__card:hover {
+  color: var(--ink);
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 rgba(58, 42, 25, 0.24);
+}
+
+.helpdesk__icon {
+  grid-row: 1 / -1;
+  align-self: start;
+  display: grid;
+  place-items: center;
+  width: 62px; height: 62px;
+  border: var(--bw) solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+}
+.helpdesk__icon svg { width: 28px; height: 28px; }
+
+.helpdesk__title { font-family: var(--head); font-weight: 700; font-size: 30px; line-height: 1.1; }
+.helpdesk__desc  { font-size: 14px; line-height: 1.7; color: var(--text-mid); }
+.helpdesk__go {
+  padding-top: 12px;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--stamp);
+}
+.helpdesk__card:hover .helpdesk__go { color: var(--stamp-dark); }
+
+/* ── Sub-page head (support / account) ────────────────────── */
+
+.pagehead {
+  padding: clamp(44px, 5vw, 66px) var(--gutter) clamp(40px, 4.6vw, 58px);
+  border-bottom: var(--bw) solid var(--ink);
+}
+.pagehead__inner { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.pagehead h1 { font-family: var(--head); font-weight: 700; font-size: var(--h1); line-height: 1.1; }
+.pagehead .lede { max-width: 620px; }
+
+/* 자리표시자·초안임을 밝히는 각주 */
+.note {
+  margin-top: 26px;
+  font-family: var(--mono); font-size: 11px; line-height: 1.8;
+  letter-spacing: 0.04em; color: var(--text-soft);
+}
+
+/* 마지막 섹션의 마무리 CTA */
+.endcta { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.endcta h2 { font-family: var(--head); font-weight: 700; font-size: var(--h2); }
+.endcta p { font-size: 15px; color: var(--text-mid); }
+.endcta__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; padding-top: 10px; }
+
+/* ── Support page ─────────────────────────────────────────── */
+
+.contact {
+  display: flex; flex-direction: column; gap: 10px;
+  background: var(--card);
+  border: var(--bw) solid var(--ink); border-radius: var(--radius);
+  padding: 24px 22px;
+  box-shadow: var(--sh) var(--sh) 0 rgba(58, 42, 25, 0.18);
+}
+.contact__label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-soft);
+}
+.contact__value {
+  font-family: var(--head); font-weight: 700; font-size: 27px;
+  line-height: 1.15; color: var(--ink); word-break: break-all;
+}
+a.contact__value:hover { color: var(--stamp); }
+.contact__note {
+  font-size: 13px; line-height: 1.7; color: var(--text-mid);
+  padding-top: 6px; border-top: 1.5px var(--rule-style) var(--rule);
+}
+
+.policy {
+  display: flex; flex-direction: column; gap: 12px;
+  background: var(--card);
+  border: var(--bw) solid var(--ink); border-radius: var(--radius);
+  padding: 26px 24px;
+  box-shadow: var(--sh) var(--sh) 0 rgba(58, 42, 25, 0.18);
+}
+.policy__no {
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.2em; color: var(--stamp);
+}
+.policy h3 { font-family: var(--head); font-weight: 700; font-size: 27px; line-height: 1.1; }
+.policy__list {
+  display: flex; flex-direction: column; gap: 10px;
+  font-size: 14px; line-height: 1.7; color: var(--text-mid);
+  padding-top: 12px; border-top: 1.5px var(--rule-style) var(--rule);
+}
+.policy__list li { padding-left: 14px; text-indent: -14px; }
+.policy__list li::before { content: '· '; }
+.policy__list b { color: var(--ink); }
+
+/* FAQ — <details>/<summary> 네이티브 아코디언 (JS 없음) */
+.faq { display: flex; flex-direction: column; gap: 14px; }
+
+.faq__item {
+  background: var(--card);
+  border: var(--bw) solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--sh) var(--sh) 0 rgba(58, 42, 25, 0.18);
+}
+
+.faq__item summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 22px;
+  font-family: var(--head); font-weight: 700; font-size: 23px; line-height: 1.3;
+  cursor: pointer;
+  list-style: none;                 /* 기본 삼각형 제거 */
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+
+/* +/− 표시는 ::after 로 그린다 — 별도 마크업이 필요 없다 */
+.faq__item summary::after {
+  content: '+';
+  flex: 0 0 auto;
+  font-family: var(--mono); font-size: 22px; line-height: 1; color: var(--stamp);
+  transition: transform 0.15s ease;
+}
+.faq__item[open] summary::after { content: '−'; }
+.faq__item summary:hover { color: var(--stamp); }
+
+.faq__body {
+  padding: 0 22px 22px;
+  font-size: 15px; line-height: 1.95; color: var(--text-mid);
+  text-wrap: pretty;
+}
+.faq__body > p { border-top: 1.5px var(--rule-style) var(--rule); padding-top: 16px; }
+
+/* ── Account page ─────────────────────────────────────────── */
+
+/* 더미 데이터임을 밝히는 배지 — 장식이 아니라 오해 방지용이다 */
+.demo-badge {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 12px 16px;
+  background: var(--accent);
+  border: var(--bw) solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-size: 13px; line-height: 1.6; color: var(--ink);
+  max-width: 640px;
+}
+.demo-badge__tag {
+  flex: 0 0 auto;
+  font-family: var(--mono); font-weight: 700; font-size: 11px;
+  letter-spacing: 0.18em;
+  background: var(--ink); color: var(--accent);
+  padding: 4px 9px;
+}
+
+.orders { display: flex; flex-direction: column; gap: 22px; }
+
+.order {
+  display: grid; grid-template-columns: 190px 1fr;
+  background: var(--card);
+  border: var(--bw) solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--sh) var(--sh) 0 rgba(58, 42, 25, 0.18);
+  overflow: hidden;
+}
+.order__thumb {
+  width: 100%; height: 100%; min-height: 200px;
+  object-fit: cover; filter: var(--img-filter);
+  border-right: var(--bw) solid var(--ink);
+}
+.order__body { display: flex; flex-direction: column; gap: 8px; padding: 24px 26px 26px; }
+
+.order__top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.order__no { font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.08em; }
+.order__date { font-family: var(--mono); font-size: 11px; color: var(--text-soft); }
+.order__name { font-family: var(--head); font-weight: 700; font-size: 28px; line-height: 1.1; }
+.order__meta { font-family: var(--mono); font-size: 12px; color: var(--text-soft); }
+.order__note {
+  font-size: 13px; line-height: 1.7; color: var(--text-mid);
+  padding-top: 12px; border-top: 1.5px var(--rule-style) var(--rule);
+}
+
+/* 배송 상태 3단계 — data-state 로 어디까지 왔는지 표시한다 */
+.track { display: flex; margin: 16px 0 4px; }
+.track li {
+  flex: 1; position: relative; padding-top: 24px; text-align: center;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+  color: var(--text-soft);
+}
+.track li::before {                       /* 단계 점 */
+  content: ''; position: absolute; top: 0; left: 50%; z-index: 1;
+  width: 13px; height: 13px; margin-left: -6.5px;
+  border: var(--bw) solid var(--ink); border-radius: 50%;
+  background: var(--paper);
+}
+.track li::after {                        /* 다음 단계로 잇는 선 */
+  content: ''; position: absolute; top: 5.5px; left: 50%;
+  width: 100%; height: 2px; background: var(--rule);
+}
+.track li:last-child::after { display: none; }
+
+/* 지나온 단계 */
+.track[data-state="1"] li:nth-child(-n+1)::before,
+.track[data-state="2"] li:nth-child(-n+2)::before,
+.track[data-state="3"] li:nth-child(-n+3)::before { background: var(--stamp); border-color: var(--stamp); }
+
+.track[data-state="1"] li:nth-child(-n+1),
+.track[data-state="2"] li:nth-child(-n+2),
+.track[data-state="3"] li:nth-child(-n+3) { color: var(--ink); font-weight: 700; }
+
+/* 지나온 구간의 연결선 */
+.track[data-state="2"] li:nth-child(-n+1)::after,
+.track[data-state="3"] li:nth-child(-n+2)::after { background: var(--stamp); }
+
+/* 주문 없음 */
+.orders__empty {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 60px 26px;
+  background: var(--card);
+  border: var(--bw) dashed var(--ink); border-radius: var(--radius);
+  text-align: center;
+}
+.orders__empty[hidden] { display: none; }
+.orders__empty-title { font-family: var(--head); font-weight: 700; font-size: 28px; }
+.orders__empty-desc { font-size: 14px; color: var(--text-mid); margin-bottom: 8px; }
+
 /* ── Footer ───────────────────────────────────────────────── */
 
 .footer {
@@ -445,6 +693,14 @@ html { scroll-behavior: smooth; }
 
   .grid--3 { grid-template-columns: 1fr; }
   .plan--featured { margin-top: 8px; }
+
+  .helpdesk__grid { grid-template-columns: 1fr; }
+
+  .order { grid-template-columns: 1fr; }
+  .order__thumb {
+    height: min(46vw, 260px); min-height: 0;
+    border-right: 0; border-bottom: var(--bw) solid var(--ink);
+  }
 }
 
 @media (max-width: 560px) {
@@ -457,6 +713,13 @@ html { scroll-behavior: smooth; }
 
   .hero__stats { gap: 12px; }
   .footer { justify-content: center; text-align: center; gap: 10px; }
+
+  .helpdesk__card { grid-template-columns: 1fr; gap: 10px; padding: 24px 22px; }
+  .helpdesk__icon { grid-row: auto; }
+  .faq__item summary { font-size: 20px; padding: 18px; }
+  .faq__body { padding: 0 18px 18px; }
+  .order__body { padding: 20px 20px 22px; }
+  .track li { font-size: 9px; }
 }
 
 /* ── Motion / print ───────────────────────────────────────── */

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>마이페이지 — 라부부 완구사</title>
+<meta name="description" content="라부부 완구사 마이페이지. 주문 조회와 배송 상태를 확인합니다. (데모 화면)">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="마이페이지 — 라부부 완구사">
+<meta property="og:description" content="주문 조회와 배송 상태 확인. 데모 화면입니다.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Space+Mono:wght@400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+<div class="page">
+
+  <!-- ── Ticker ───────────────── index.html과 동일하게 유지 ── -->
+  <div class="ticker">
+    <span>Since 1996</span><span aria-hidden="true">◆</span>
+    <span>Handmade in Seoul</span><span aria-hidden="true">◆</span>
+    <span>Free shipping over ₩50,000</span>
+  </div>
+
+  <!-- ── Nav ───────── 서브페이지: 앵커 앞에 index.html 을 붙인다 ── -->
+  <nav class="nav">
+    <a class="brand" href="index.html">
+      <span class="brand__name">라부부 완구사</span>
+      <span class="brand__sub">TOY CO.</span>
+    </a>
+    <div class="nav__links">
+      <a href="index.html#lineup">Line-up</a>
+      <a href="index.html#howmade">How it's made</a>
+      <a href="index.html#letters">Letters</a>
+      <a href="index.html#order">Order</a>
+    </div>
+    <a class="btn btn--stamp nav__cta" href="index.html#order">주문하기</a>
+  </nav>
+
+  <!-- ── Page head ────────────────────────────────────────── -->
+  <section class="pagehead">
+    <div class="wrap pagehead__inner">
+      <span class="eyebrow">My page</span>
+      <h1>마이페이지</h1>
+
+      <!-- 데모 배지: 아래 주문은 전부 HTML에 박힌 더미다.
+           표시가 없으면 실제 조회 결과로 오해할 수 있어 필수 항목으로 둔다. -->
+      <p class="demo-badge">
+        <span class="demo-badge__tag">DEMO</span>
+        <span>화면 확인용 예시입니다. 실제 주문 내역이 아니며, 로그인·주문 조회는 아직 동작하지 않습니다.</span>
+      </p>
+
+      <p class="lede">주문하신 상자가 지금 어디쯤 왔는지 볼 수 있습니다. 제작이 끝나면 등록하신 번호로 발송 안내를 보내드려요.</p>
+    </div>
+  </section>
+
+  <!-- ── 주문 내역 ────────────────────────────────────────── -->
+  <section class="section" id="main">
+    <div class="wrap">
+
+      <div class="section__head">
+        <h2>주문 내역</h2>
+        <span class="meta">3 ORDERS</span>
+      </div>
+
+      <div class="orders">
+
+        <article class="order">
+          <img class="order__thumb" src="uploads/labubu-rainbow.jpeg" alt="사탕언덕 라부부" width="736" height="977" loading="lazy">
+          <div class="order__body">
+            <div class="order__top">
+              <span class="order__no">LB-2026-0412</span>
+              <span class="order__date">2026.04.12 주문</span>
+            </div>
+            <h3 class="order__name">사탕언덕 라부부</h3>
+            <p class="order__meta">Model 02 · No. 041/500 · ₩42,000 · 1개</p>
+            <ol class="track" data-state="3">
+              <li>제작 중</li>
+              <li>발송</li>
+              <li>배송 완료</li>
+            </ol>
+            <p class="order__note">2026.04.24 수령 완료 · 보증서 번호 041</p>
+          </div>
+        </article>
+
+        <article class="order">
+          <img class="order__thumb" src="uploads/labubu-white.jpeg" alt="잠수부 라부부" width="736" height="1594" loading="lazy">
+          <div class="order__body">
+            <div class="order__top">
+              <span class="order__no">LB-2026-0517</span>
+              <span class="order__date">2026.05.17 주문</span>
+            </div>
+            <h3 class="order__name">잠수부 라부부</h3>
+            <p class="order__meta">Model 03 · No. 128/500 · ₩45,000 · 1개</p>
+            <ol class="track" data-state="2">
+              <li>제작 중</li>
+              <li>발송</li>
+              <li>배송 완료</li>
+            </ol>
+            <p class="order__note">2026.05.29 발송 · 도착까지 1 — 2일</p>
+          </div>
+        </article>
+
+        <article class="order">
+          <img class="order__thumb" src="uploads/labubu-blue.jpeg" alt="비눗방울 라부부" width="736" height="981" loading="lazy">
+          <div class="order__body">
+            <div class="order__top">
+              <span class="order__no">LB-2026-0603</span>
+              <span class="order__date">2026.06.03 주문</span>
+            </div>
+            <h3 class="order__name">비눗방울 라부부</h3>
+            <p class="order__meta">Model 04 · No. 137/500 · ₩48,000 · 1개</p>
+            <ol class="track" data-state="1">
+              <li>제작 중</li>
+              <li>발송</li>
+              <li>배송 완료</li>
+            </ol>
+            <p class="order__note">야광 도료 건조 중 · 6월 17일경 발송 예정</p>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- 주문이 없을 때 쓰는 화면. 실제 데이터가 붙으면 조건부로 노출한다. -->
+      <div class="orders__empty" hidden>
+        <p class="orders__empty-title">아직 주문이 없어요</p>
+        <p class="orders__empty-desc">네 마리 중 마음에 드는 아이를 골라 보세요.</p>
+        <a class="btn btn--ink" href="index.html#lineup">라인업 보기</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 하단 CTA ─────────────────────────────────────────── -->
+  <section class="section">
+    <div class="wrap endcta">
+      <h2>주문에 문제가 있나요?</h2>
+      <p>배송이 늦거나 상자가 상해서 왔다면 알려 주세요. 평일 10시에서 18시 사이에 답합니다.</p>
+      <div class="endcta__actions">
+        <a class="btn btn--ink" href="support.html">고객센터 가기</a>
+        <a class="btn btn--card" href="index.html#lineup">한 마리 더 보기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────── index.html과 동일하게 유지 ─── -->
+  <footer class="footer">
+    <span>라부부 완구사 · Seoul</span>
+    <span>Mon — Fri 10:00 / 18:00</span>
+    <span>© 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
