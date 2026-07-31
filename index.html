@@ -173,7 +173,11 @@
   <section class="section section--rule" id="letters">
     <div class="wrap">
       <h2 class="section__title">받은 편지들</h2>
-      <div class="grid grid--3">
+    </div>
+
+    <div class="bleed">
+      <div class="scroller">
+        <div class="scroller__track" data-marquee data-set="3">
 
         <figure class="letter">
           <div class="letter__head">
@@ -202,6 +206,7 @@
           <figcaption>박하늘 · 잠수부</figcaption>
         </figure>
 
+        </div>
       </div>
     </div>
   </section>
@@ -264,5 +269,27 @@
   </footer>
 
 </div>
+
+<script>
+  /* 가로 무한 스크롤 — 원본 카드를 복제해 이음매 없이 이어 붙인다.
+     JS가 없거나 모션 최소화 설정이면 원본 카드 그대로 남고 애니메이션만 빠진다. */
+  (function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.querySelectorAll('[data-marquee]').forEach(function (track) {
+      var originals = Array.prototype.slice.call(track.children);
+      // 한 세트가 밀려난 뒤에도 화면이 채워지도록 총 4세트를 둔다.
+      for (var pass = 0; pass < 3; pass++) {
+        originals.forEach(function (node) {
+          var clone = node.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          clone.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+          track.appendChild(clone);
+        });
+      }
+      track.dataset.ready = '';
+    });
+  })();
+</script>
 </body>
 </html>

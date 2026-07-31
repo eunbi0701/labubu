@@ -315,6 +315,49 @@ html { scroll-behavior: smooth; }
   border-top: 1.5px var(--rule-style) var(--rule);
 }
 
+/* ── Horizontal marquee (받은 편지들) ─────────────────────────
+   카드(.letter) 디자인은 그대로 두고, 배치만 무한 가로 스크롤로 바꾼다.
+   폭만 지정하는 이유: 그리드와 달리 flex 줄에서는 카드가 스스로 폭을 못 정한다.
+   372px = 기존 3열 그리드에서 카드가 갖던 폭이라 겉보기는 동일하다. */
+
+.bleed { margin-inline: calc(-1 * var(--gutter)); }
+
+.scroller {
+  --letter-w: 372px;
+  --letter-gap: 22px;
+  --scroll-duration: 64s;
+
+  position: relative;
+  overflow: hidden;
+  padding-block: 6px 18px;          /* 하드 셰도우가 잘리지 않도록 */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+
+.scroller__track {
+  display: flex;
+  align-items: stretch;
+  gap: var(--letter-gap);
+  width: max-content;
+  padding-left: var(--gutter);
+}
+
+.scroller__track[data-ready] {
+  animation: scroll-letters var(--scroll-duration) linear infinite;
+}
+
+/* 읽는 동안 멈춤 — 흐르는 본문은 정지 없이는 읽기 어렵다 */
+.scroller:hover  .scroller__track[data-ready],
+.scroller:focus-within .scroller__track[data-ready] { animation-play-state: paused; }
+
+.scroller .letter { flex: 0 0 var(--letter-w); width: var(--letter-w); }
+
+/* 한 세트(카드 3장 + 간격 3개)만큼 밀면 복제본이 정확히 그 자리를 잇는다 */
+@keyframes scroll-letters {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-3 * (var(--letter-w) + var(--letter-gap)))); }
+}
+
 /* ── Order plans ──────────────────────────────────────────── */
 
 .plan {
@@ -406,6 +449,7 @@ html { scroll-behavior: smooth; }
 
 @media (max-width: 560px) {
   .grid--4 { grid-template-columns: 1fr; }
+  .scroller { --letter-w: 78vw; --letter-gap: 16px; --scroll-duration: 46s; }
   .product__media img { height: min(56vw, 300px); }
 
   .badge { width: 88px; height: 88px; top: -16px; right: -8px; }
@@ -421,6 +465,10 @@ html { scroll-behavior: smooth; }
   html { scroll-behavior: auto; }
   .badge { animation: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
+
+  /* 흐르지 않고, 손으로 밀어서 보는 줄이 된다 */
+  .scroller { overflow-x: auto; }
+  .scroller__track { animation: none !important; }
 }
 
 @media print {
